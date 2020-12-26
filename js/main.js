@@ -18,7 +18,8 @@
 
 Demo = {
 
-  init: function(block_data) {
+  init: function(data) {
+    Demo.data = data;
     Demo.el = {
       examples: $('#examples'),
       blocks:   $('#blocks'),
@@ -31,10 +32,10 @@ Demo = {
       ratio:    $('#ratio'),
       nofit:    $('#nofit')
     };
-    //console.log("canvases",Demo.el.canvases.html());
     
-    for(tag in block_data) {
-        var block = block_data[tag]
+    // Populate the UI with blocks.  The UI is actually the source for the algorithm!!
+    for(tag in Demo.data.blocks) {
+        var block = Demo.data.blocks[tag]
         if($.isArray(block)) Demo.blocks.examples[tag] = block;
         Demo.el.examples.append($('<option>', {value: tag, text:tag}));
     }   
@@ -66,7 +67,7 @@ Demo = {
     //console.log("run()", nPanels);
     
     var blocks = Demo.blocks.deserialize(Demo.el.blocks.val());
-    var packer = Demo.packer();
+    var packer = Demo.packer(Demo.data.kerf);
 
     Demo.sort.now(blocks);
 
@@ -103,14 +104,14 @@ Demo = {
 
   //---------------------------------------------------------------------------
 
-  packer: function() {
+  packer: function(kerf) {
     var size = Demo.el.size.val();
     if (size == 'automatic') {
       return new GrowingPacker();
     }
     else {
       var dims = size.split("x");
-      return new Packer(parseInt(dims[0]), parseInt(dims[1]), Demo.el.panels.val());
+      return new Packer(parseInt(dims[0]), parseInt(dims[1]), Demo.el.panels.val(), kerf);
     }
   },
 
@@ -183,11 +184,23 @@ Demo = {
     },
     
     label: function(x, y, w, h, text) {
-        Demo.el.draw.fillStyle = "black";
-        Demo.el.draw.font = "8px san-serif";
-        textWidth = Demo.el.draw.measureText(text).width;
-        
-        Demo.el.draw.fillText(text, x+w/2-textWidth/2, y+h/2+4);
+        var ctx = Demo.el.draw;
+        ctx.save();
+        ctx.textAlign = "center";
+        ctx.translate(x,y);
+
+        ctx.fillStyle = "black";
+        ctx.font = "10px san-serif";
+        measure = ctx.measureText(text);
+        console.log(text, measure.width, measure.actualBoundingBoxAscent);
+
+        if(w < h) {
+            ctx.rotate(-Math.PI/2);
+            ctx.fillText(text, -h/2, measure.actualBoundingBoxAscent+4);
+       } else
+            ctx.fillText(text, w/2, h/2 + measure.actualBoundingBoxAscent/2);
+
+        ctx.restore();
     },
 
     blocks: function(blocks, stock) {
@@ -295,6 +308,6 @@ Demo = {
 }
 
 $(document).ready(function() {
-  Demo.init(block_data);
+  Demo.init(data);
 });
 

@@ -50,13 +50,14 @@ Example:
 
 ******************************************************************************/
 
-Packer = function(w, h, n) {
-  this.init(w, h, n);
+Packer = function(w, h, n, kerf) {
+  this.kerf = kerf;
+  this.init(w, h, n, kerf);
 };
 
 Packer.prototype = {
 
-  init: function(w, h, n) {
+  init: function(w, h, n, kerf) {
       if(n == 1) {
         this.root = { x: 0, y: 0, w: w, h: h, stock:1 };
       } else {
@@ -112,10 +113,12 @@ Packer.prototype = {
   },
 
   splitNode: function(node, w, h) {
+    var k = this.kerf;
+    console.log('kerf',k);
     // 1 node becomes 3.  Original node is marked used (area used will be taken from the block).
     node.used = true;
-    node.down  = { x: node.x,     y: node.y + h, w: node.w,     h: node.h - h, stock: node.stock }; // full width * remaining height
-    node.right = { x: node.x + w, y: node.y,     w: node.w - w, h: h         , stock: node.stock }; // remaining width * block height 
+    node.down  = { x: node.x,           y: node.y + (h + k), w: node.w,         h: node.h - (h+k), stock: node.stock }; // full width * remaining height
+    node.right = { x: node.x + (w + k), y: node.y,           w: node.w - (w+k), h: h             , stock: node.stock }; // remaining width * block height 
     return node;
   }
 
