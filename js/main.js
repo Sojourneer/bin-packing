@@ -32,6 +32,7 @@ Demo = {
       ratio:    $('#ratio'),
       nofit:    $('#nofit')
     };
+    $("#kerf").text(Demo.data.kerf);
     
     // Populate the UI with blocks.  The UI is actually the source for the algorithm!!
     for(tag in Demo.data.blocks) {
@@ -111,7 +112,7 @@ Demo = {
     }
     else {
       var dims = size.split("x");
-      return new Packer(parseInt(dims[0]), parseInt(dims[1]), Demo.el.panels.val(), kerf);
+      return new Packer(parseFloat(dims[0]), parseFloat(dims[1]), Demo.el.panels.val(), kerf);
     }
   },
 
@@ -254,8 +255,8 @@ Demo = {
         if (block.length >= 2) // well-formed
           result.push({
                 id:blocks[i],
-                w: parseInt(block[0]),
-                h: parseInt(block[1]),
+                w: parseFloat(block[0]),
+                h: parseFloat(block[1]),
                 num: (block.length == 2 ? 1 : parseInt(block[2]))
           });
       }

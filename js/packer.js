@@ -114,7 +114,6 @@ Packer.prototype = {
 
   splitNode: function(node, w, h) {
     var k = this.kerf;
-    console.log('kerf',k);
     // 1 node becomes 3.  Original node is marked used (area used will be taken from the block).
     node.used = true;
     node.down  = { x: node.x,           y: node.y + (h + k), w: node.w,         h: node.h - (h+k), stock: node.stock }; // full width * remaining height

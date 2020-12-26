@@ -1,5 +1,5 @@
 data = {
-    kerf: 2,
+    kerf: 0.2,
     blocks: {
       s10060_roofless: [
         { w: 100, h: 60, num:  1 },
