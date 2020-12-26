@@ -31,7 +31,7 @@ Demo = {
       ratio:    $('#ratio'),
       nofit:    $('#nofit')
     };
-    console.log("canvases",Demo.el.canvases.html());
+    //console.log("canvases",Demo.el.canvases.html());
     
     for(tag in block_data) {
         var block = block_data[tag]
@@ -63,7 +63,7 @@ Demo = {
 
   run: function() {
     nPanels = parseInt(Demo.el.panels.val());
-    console.log("run()", nPanels);
+    //console.log("run()", nPanels);
     
     var blocks = Demo.blocks.deserialize(Demo.el.blocks.val());
     var packer = Demo.packer();
@@ -71,7 +71,7 @@ Demo = {
     Demo.sort.now(blocks);
 
     packer.fit(blocks);
-    console.log(blocks);
+    //console.log(blocks);
     
     //console.log("run: starting canvas population",Demo.el.canvases.html());
     
@@ -89,7 +89,7 @@ Demo = {
     
     for(i=0; i < canvases.length; ++i) {
         Demo.el.canvas = canvases[i];
-        console.log("nth canvas(",i,Demo.el.canvas.outerHTML);
+        //console.log("nth canvas(",i,Demo.el.canvas.outerHTML);
         
         Demo.el.draw = Demo.el.canvas.getContext("2d");
         Demo.canvas.reset(packer.root.w, packer.root.h);

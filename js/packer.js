@@ -2,9 +2,12 @@
 /******************************************************************************
 
 This is a very simple binary tree based bin packing algorithm that is initialized
-with a fixed width and height and will fit each block into the first node where
-it fits and then split that node into 2 parts (down and right) to track the
+with the initial available space, which is 1 or more areas (stock) with a fixed width and height,
+each node recording from which stock it came.
+The packing algorithm fits each block into the first node where it fits,
+and then splits that node into 2 parts (down and right) to track the
 remaining whitespace.
+
 
 Best results occur when the input blocks are sorted by height, or even better
 when sorted by max(width,height).
@@ -48,7 +51,6 @@ Example:
 ******************************************************************************/
 
 Packer = function(w, h, n) {
-  console.log(n);
   this.init(w, h, n);
 };
 
@@ -58,15 +60,27 @@ Packer.prototype = {
       if(n == 1) {
         this.root = { x: 0, y: 0, w: w, h: h, stock:1 };
       } else {
-        var p1 = { x: 0, y: 0, w: w, h: h, stock:1 };
-        var p2 = { x: 0, y: 0, w: w, h: h, stock:2 };
+        // Panel on the right, remaining panels below
         this.root = {
             x: 0, y: 0, w: w, h: h,
             used: true,
-            right: p1,
-            down: p2
         }
+        // Each iteration creates a panel to the right, and descends with the remaining
+        var node = this.root;
+        for(let i=1; i <= n; ++i){
+            node.right =  new Object({ x: 0, y: 0, w: w, h: h, stock:i });
+            node.down = new Object({ x: 0, y: 0, w: w, h: h, index:i });
+            if(i == n)
+                node.down.stock = n;
+            else
+                node.down.used = true;
+            //console.log("looping",i,node);
+            node = node.down;
+        }
+        
       }
+      //console.log(n, this.root);
+      //debugger;
   },
 
   fit: function(blocks) {
@@ -74,7 +88,7 @@ Packer.prototype = {
     for (n = 0; n < blocks.length; n++) {
       block = blocks[n];
         if (result = this.findNode(this.root, block.w, block.h)) {
-            console.log("fit",result);
+            //console.log("fit",result);
             if(result.rotated)
                 block.fit = this.splitNode(result.node, block.h, block.w);
             else
@@ -98,9 +112,10 @@ Packer.prototype = {
   },
 
   splitNode: function(node, w, h) {
+    // 1 node becomes 3.  Original node is marked used (area used will be taken from the block).
     node.used = true;
-    node.down  = { x: node.x,     y: node.y + h, w: node.w,     h: node.h - h, stock: node.stock };
-    node.right = { x: node.x + w, y: node.y,     w: node.w - w, h: h         , stock: node.stock };
+    node.down  = { x: node.x,     y: node.y + h, w: node.w,     h: node.h - h, stock: node.stock }; // full width * remaining height
+    node.right = { x: node.x + w, y: node.y,     w: node.w - w, h: h         , stock: node.stock }; // remaining width * block height 
     return node;
   }
 
