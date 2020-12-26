@@ -10,7 +10,7 @@
 #settings .nofit           { display: none; border: 1px solid red; margin-top: 1em; padding: 1em; }
 
 #canvases                   { margin-left: 15em; }
-.canvas                       { background-color: #FBFBFB; width:200px; height:100px}
+.canvas                       { background-color: #FBFBFB; width:200px; height:100px; padding:5px}
 #unsupported               { border: 1px solid red; background-color: #FFFFAD; padding: 1em; margin: 1em; }
 
 textarea { resize: none; }
