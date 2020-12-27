@@ -34,11 +34,11 @@ Demo = {
     };
     $("#kerf").text(Demo.data.kerf);
     
-    // Populate the UI with blocks.  The UI is actually the source for the algorithm!!
-    for(tag in Demo.data.blocks) {
-        var block = Demo.data.blocks[tag]
-        if($.isArray(block)) Demo.blocks.examples[tag] = block;
-        Demo.el.examples.append($('<option>', {value: tag, text:tag}));
+    // Populate the UI SELECT with the blocksets.  The UI is actually the source for the algorithm!!
+    for(tag in Demo.data.blocksets) {
+        var blockDescription = Demo.data.blocksets[tag]
+        if(blockDescription.label /*$.isArray(block)*/) Demo.blocks.examples[tag] = blockDescription.blocks;
+        Demo.el.examples.append($('<option>', {value: tag, label:blockDescription.label}));
     }   
 
     if (!Demo.el.canvas.getContext) // no support for canvas
